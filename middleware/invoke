@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/invoke_app "$@" -C "start_jupyter -A -T @tool mRNAvaccine2GUI.ipynb" -t mrnatumor -u anaconda-6

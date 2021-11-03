@@ -1,0 +1,1579 @@
+<PhysiCell_settings version="devel-version">
+	<domain>
+		<x_min>-500</x_min>
+		<x_max>500</x_max>
+		<y_min>-500</y_min>
+		<y_max>500</y_max>
+		<z_min>-10</z_min>
+		<z_max>10</z_max>
+		<dx>20</dx>
+		<dy>20</dy>
+		<dz>20</dz>
+		<use_2D>true</use_2D>
+	</domain>
+	
+	<overall>
+		<max_time units="min">20160</max_time> 
+		<time_units>min</time_units>
+		<space_units>micron</space_units>
+	
+		<dt_diffusion units="min">0.01</dt_diffusion>
+		<dt_mechanics units="min">0.1</dt_mechanics>
+		<dt_phenotype units="min">6</dt_phenotype>	
+	</overall>
+	
+	<parallel>
+		<omp_num_threads>4</omp_num_threads>
+	</parallel> 
+
+	<options>
+		<legacy_random_points_on_sphere_in_divide>false</legacy_random_points_on_sphere_in_divide>
+	</options>	
+	
+	<save>
+		<folder>.</folder>  
+
+		<full_data>
+			<interval units="min">120</interval>
+			<enable>true</enable>
+		</full_data>
+		
+		<SVG>
+			<interval units="min">120</interval>
+			<enable>true</enable>
+		</SVG>
+		
+		<legacy_data>
+			<enable>false</enable>
+		</legacy_data>
+	</save>
+	
+	<microenvironment_setup>
+		<variable ID="2" name="ISF" units="mol/micron^3">
+			<physical_parameter_set>
+				<diffusion_coefficient units="micron^2/min">1000</diffusion_coefficient>  
+				<decay_rate units="1/min">0.016</decay_rate>  
+			</physical_parameter_set>
+			<initial_condition units="mol/micron^3">0</initial_condition>
+			<Dirichlet_boundary_condition enabled="false" units="mol/micron^3">0</Dirichlet_boundary_condition>
+		</variable>
+		
+		<variable ID="3" name="debris" units="mol/micron^3">
+			<physical_parameter_set>
+				<diffusion_coefficient units="micron^2/min">555.56</diffusion_coefficient>
+				<decay_rate units="1/min">1.02e-2</decay_rate>  
+			</physical_parameter_set>
+			<initial_condition units="mol/micron^3">0</initial_condition>
+			<Dirichlet_boundary_condition enabled="false" units="mol/micron^3">0</Dirichlet_boundary_condition>
+		</variable>
+		
+		<variable ID="4" name="Ig" units="mol/micron^3">
+			<physical_parameter_set>
+				<diffusion_coefficient units="micron^2/min">6</diffusion_coefficient>  
+				<decay_rate units="1/min">6.8765e-05</decay_rate>  
+			</physical_parameter_set>
+			<initial_condition units="mol/micron^3">0</initial_condition>
+			<Dirichlet_boundary_condition enabled="false" units="mol/micron^3">0</Dirichlet_boundary_condition>
+		</variable>	
+
+		<variable ID="5" name="oxygen" units="mmHg">
+			<physical_parameter_set>
+				<diffusion_coefficient units="micron^2/min">100000.000000</diffusion_coefficient>
+				<decay_rate units="1/min">0.1</decay_rate>   
+			</physical_parameter_set>
+			<initial_condition units="mmHg">38</initial_condition>
+			<Dirichlet_boundary_condition enabled="true" units="mmHg">38</Dirichlet_boundary_condition>
+		</variable>
+		
+		<variable ID="6" name="Lipid-nanoparticles" units="1/micron^3">
+			<physical_parameter_set>
+				<diffusion_coefficient units="micron^2/min">6</diffusion_coefficient>
+				<decay_rate units="1/min">1.6045e-05</decay_rate>  
+			</physical_parameter_set>
+			<initial_condition units="1/micron^3">0</initial_condition>
+			<Dirichlet_boundary_condition enabled="false" units="1/micron^3">0</Dirichlet_boundary_condition>
+		</variable>	
+
+
+		<options>
+			<calculate_gradients>true</calculate_gradients>
+			<track_internalized_substrates_in_each_agent>true</track_internalized_substrates_in_each_agent>
+			 
+			<initial_condition enabled="false" type="matlab">
+				<filename>./config/initial.mat</filename>
+			</initial_condition>
+			 
+			<dirichlet_nodes enabled="false" type="matlab">
+				<filename>./config/dirichlet.mat</filename>
+			</dirichlet_nodes>
+		</options>
+	</microenvironment_setup>	
+	
+	<cell_definitions>
+		<cell_definition ID="0" name="default">
+			<phenotype>
+				<cycle code="6" name="flow_cytometry_separated_cycle_model">  
+					
+					<phase_transition_rates units="1/min"> 
+						
+						<rate end_index="1" fixed_duration="false" start_index="0">0</rate>
+						 
+						
+						<rate end_index="2" fixed_duration="true" start_index="1">0.00208333</rate>
+						
+						<rate end_index="3" fixed_duration="true" start_index="2">0.00416667</rate>
+						
+						<rate end_index="0" fixed_duration="true" start_index="3">0.0166667</rate>
+					</phase_transition_rates>
+				</cycle>
+				
+				<death>  
+					<model code="100" name="apoptosis"> 
+						<death_rate units="1/min">0</death_rate>  
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="true" start_index="0">0.00193798</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+
+					<model code="101" name="necrosis">
+						<death_rate units="1/min">0.0</death_rate>
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="false" start_index="0">9e9</rate>
+							<rate end_index="2" fixed_duration="true" start_index="1">1.15741e-5</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+				</death>					
+
+				<volume>  
+					<total units="micron^3">2494</total>
+					<fluid_fraction units="dimensionless">0.75</fluid_fraction>
+					<nuclear units="micron^3">540</nuclear>
+					
+					<fluid_change_rate units="1/min">0.05</fluid_change_rate>
+					<cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+					<nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+					
+					<calcified_fraction units="dimensionless">0</calcified_fraction>
+					<calcification_rate units="1/min">0</calcification_rate>
+					
+					<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+				</volume> 				
+				
+				<mechanics> 
+					<cell_cell_adhesion_strength units="micron/min">0.4</cell_cell_adhesion_strength>
+					<cell_cell_repulsion_strength units="micron/min">10.0</cell_cell_repulsion_strength>
+					<relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+					
+					<options>
+						<set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+						<set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+					</options>
+				</mechanics>
+				
+				<motility>  
+					<speed units="micron/min">4</speed>
+					<persistence_time units="min">5</persistence_time>
+					<migration_bias units="dimensionless">0.7</migration_bias>
+					
+					<options>
+						<enabled>false</enabled>
+						<use_2D>true</use_2D>
+						<chemotaxis>
+							<enabled>false</enabled>
+							<substrate>ISF</substrate>
+							<direction>1</direction>
+						</chemotaxis>
+					</options>
+				</motility>
+
+				<secretion>	
+					<substrate name="ISF">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+					<substrate name="debris">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate>	
+					<substrate name="Ig">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+						
+				</secretion>
+
+				<molecular />
+			</phenotype>
+			<custom_data>  
+				 
+				<unbound_external_receptor description="initial number of unbound receptors on DC surface" type="double" units="receptors">200</unbound_external_receptor>
+				<bound_external_receptor description="initial number of bound receptors on DC surface" type="double" units="receptors">0</bound_external_receptor>
+				<unbound_internal_receptor description="initial number of internalized unbound receptors" type="double" units="receptors">0</unbound_internal_receptor>
+				<bound_internal_receptor description="initial number of internalized bound receptors" type="double" units="receptors">0</bound_internal_receptor>
+	
+				<receptor_binding_rate description="DC receptor-LNP binding rate" type="double" units="1/min">0.001</receptor_binding_rate> 
+				<receptor_endocytosis_rate description="DC receptor-LNP endocytosis rate" type="double" units="1/min">0.01</receptor_endocytosis_rate> 
+				<receptor_cargo_release_rate description="DC receptor-LNP cargo release rate" type="double" units="1/min">0.01</receptor_cargo_release_rate> 
+				<receptor_recycling_rate description="DC receptor recycling rate" type="double" units="1/min">0.01</receptor_recycling_rate> 
+				
+				 
+				<debris_secretion_rate description="rate that dead cells release debris" type="double" units="1/min">1</debris_secretion_rate>
+					
+				 
+				<TCell_detection description="protein value at which a T Cell can detect an infected cell" type="double" units="protein">10</TCell_detection>
+				<TCell_contact_time description="tracks total contact time with CD8 T cells" type="double" units="min">0.0</TCell_contact_time>
+				<cell_attachment_rate description="the rate at which the cell attaches to cells in contact" type="double" units="1/min">0</cell_attachment_rate>
+				<cell_attachment_lifetime description="the mean duration of a cell-cell attachment" type="double" units="min">0</cell_attachment_lifetime>
+				
+				<TCell_contact_death_threshold description="threshold CD8 T cell contact time to trigger apoptosis" type="double" units="min">90</TCell_contact_death_threshold> 
+				<max_attachment_distance desription="max distance at which to form a cell-cell attachment" type="double" units="micron">15</max_attachment_distance>
+				<elastic_attachment_coefficient description="elastic coefficient for cell-cell attachment" type="double" units="1/min">0.01</elastic_attachment_coefficient>
+		        
+		        
+				
+				<time_to_next_phagocytosis description="time it takes for the apoptotic material to be phagocytosed" type="double" units="min">0</time_to_next_phagocytosis>
+				
+				<material_internalisation_rate desription="rate material is ingested by phagocyte" type="double" units="micron/min">1</material_internalisation_rate>
+				
+				<threshold_macrophage_volume desription="Threshold volume for macrophage exhaustion" type="double" units="micron">6500</threshold_macrophage_volume>
+
+				 
+				<exhausted_macrophage_death_rate desription="Threshold volume for neutrophil exhaustion" type="double" units="1/min">0.01</exhausted_macrophage_death_rate>
+				 
+				<ability_to_phagocytose_infected_cell description="Boolean for whether macrophages can phagocytose infected cells" type="int" units="dimensionless">0</ability_to_phagocytose_infected_cell>
+				 
+				<time_of_DC_departure description="Time DC leaves tissue after activation" type="double" units="min">0</time_of_DC_departure>
+
+				
+				<phagocytosis_rate desription="rate of phagocytosing a nearby target" type="double" units="1/min">0.167</phagocytosis_rate>
+				
+							
+				<phagocytosis_relative_target_cutoff_size desription="do not phagocytose anything over this size (relative to cell's volume)" type="double" unit="dimensionless">1.1</phagocytosis_relative_target_cutoff_size>
+
+				<sensitivity_to_debris_chemotaxis description="relative sensitivity to debris in chemotaxis" type="double" units="dimensionless">1.0</sensitivity_to_debris_chemotaxis>
+				<sensitivity_to_ISF_chemotaxis description="relative sensitivity to ISF in chemotaxis" type="double" units="dimensionless">10.0</sensitivity_to_ISF_chemotaxis> 
+
+				<activated_speed description="speed after activation" type="double" units="micron/min">0.4</activated_speed>
+				<activated_cytokine_secretion_rate description="rate of secreting pro-inflamatory cytokine after activation" type="double" units="1/min">0.001</activated_cytokine_secretion_rate>
+
+				<activated_immune_cell description="used internally to track activation state" type="double" units="dimensionless">0.0</activated_immune_cell>
+					
+				
+				<antiinflammatory_cytokine_secretion_rate_by_macrophage description="secretion rate of anti-inflammatory from macrophage" type="double" units="1/min">0.07</antiinflammatory_cytokine_secretion_rate_by_macrophage>
+
+				
+				<generation description="cell proliferation generation" type="int" units="dimensionless">3</generation>
+
+
+				
+
+				 
+				<antigen_protein description="number of unbound antigen proteins on tumor cell membrane" type="double" units="antigen">500</antigen_protein>
+				<antibody_antigen_complex description="number of antibody-antigen protein complex on tumor cell membrane" type="double" units="complex">0</antibody_antigen_complex>
+				<antibody_binding_rate description="antigen protein-antibody binding rate" type="double" units="1/min">0.08</antibody_binding_rate> 
+				<last_cycle_entry_time description="time that tumor cell entry cycle when division" type="double" units="mins">0</last_cycle_entry_time>
+				<division_generation description="how many generations tumor cell has divided" type="int" units="generation">0</division_generation>
+				<E_Ig_complex description="the effect of antibody-antigen protein complex" type="double" units="none">0</E_Ig_complex>
+
+				 
+				<total_intern_LNP desription="how many of total LNP are endocytosed in DC cell" type="double" units="LNP">0</total_intern_LNP>
+				<endosome_LNP desription="how many LNP are endocytosed in endosome" type="double" units="LNP">0</endosome_LNP>
+				<free_LNP desription="how many LNP are free in cytoplasm (escape from endosome)" type="double" units="LNP">0</free_LNP>
+				<uncoated_LNP desription="how many LNP are uncoated" type="double" units="LNP">0</uncoated_LNP>
+				<mRNA desription="how many mRNA are cytoplasm" type="double" units="mRNA">0</mRNA>
+				<antigenic_epitope desription="how many epitope are translated" type="double" units="epitope">0</antigenic_epitope>
+			
+			</custom_data>
+		</cell_definition>
+
+		 
+		<cell_definition ID="2" name="immune" visible="true">
+			<phenotype>
+				<cycle code="6" name="flow_cytometry_separated_cycle_model">  
+					
+					<phase_transition_rates units="1/min"> 
+						
+						<rate end_index="1" fixed_duration="false" start_index="0">0</rate>
+						 
+						
+						<rate end_index="2" fixed_duration="true" start_index="1">0.00208333</rate>
+						
+						<rate end_index="3" fixed_duration="true" start_index="2">0.00416667</rate>
+						
+						<rate end_index="0" fixed_duration="true" start_index="3">0.0166667</rate>
+					</phase_transition_rates>
+				</cycle>
+				
+				<death>  
+					<model code="100" name="apoptosis"> 
+						<death_rate units="1/min">5e-4</death_rate>  
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="true" start_index="0">0.00193798</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+
+					<model code="101" name="necrosis">
+						<death_rate units="1/min">0.0</death_rate>
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="false" start_index="0">9e9</rate>
+							<rate end_index="2" fixed_duration="true" start_index="1">1.15741e-5</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+				</death>					
+
+				<volume>  
+					<total units="micron^3">2494</total>
+					<fluid_fraction units="dimensionless">0.75</fluid_fraction>
+					<nuclear units="micron^3">540</nuclear>
+					
+					<fluid_change_rate units="1/min">0.05</fluid_change_rate>
+					<cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+					<nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+					
+					<calcified_fraction units="dimensionless">0</calcified_fraction>
+					<calcification_rate units="1/min">0</calcification_rate>
+					
+					<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+				</volume> 				
+				
+				<mechanics> 
+					<cell_cell_adhesion_strength units="micron/min">0</cell_cell_adhesion_strength>
+					<cell_cell_repulsion_strength units="micron/min">10</cell_cell_repulsion_strength>
+					<relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+					
+					<options>
+						<set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+						<set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+					</options>
+				</mechanics>
+				
+				<motility>  
+					<speed units="micron/min">4</speed>
+					<persistence_time units="min">5</persistence_time>
+					<migration_bias units="dimensionless">0.70</migration_bias>
+					
+					<options>
+						<enabled>true</enabled>
+						<use_2D>true</use_2D>
+						<chemotaxis>
+							<enabled>true</enabled>
+							<substrate>ISF</substrate>
+							<direction>1</direction>
+						</chemotaxis>
+					</options>
+				</motility>
+
+				<secretion>	
+					<substrate name="ISF">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+					<substrate name="debris">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate>	
+					<substrate name="Ig">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+						
+				</secretion>
+
+				<molecular />
+			</phenotype>
+			<custom_data>  
+				 
+				<unbound_external_receptor description="initial number of unbound receptors on DC surface" type="double" units="receptors">200</unbound_external_receptor>
+				<bound_external_receptor description="initial number of bound receptors on DC surface" type="double" units="receptors">0</bound_external_receptor>
+				<unbound_internal_receptor description="initial number of internalized unbound receptors" type="double" units="receptors">0</unbound_internal_receptor>
+				<bound_internal_receptor description="initial number of internalized bound receptors" type="double" units="receptors">0</bound_internal_receptor>
+	
+				<receptor_binding_rate description="DC receptor-LNP binding rate" type="double" units="1/min">0.001</receptor_binding_rate> 
+				<receptor_endocytosis_rate description="DC receptor-LNP endocytosis rate" type="double" units="1/min">0.01</receptor_endocytosis_rate> 
+				<receptor_cargo_release_rate description="DC receptor-LNP cargo release rate" type="double" units="1/min">0.01</receptor_cargo_release_rate> 
+				<receptor_recycling_rate description="DC receptor recycling rate" type="double" units="1/min">0.01</receptor_recycling_rate> 
+				
+				 
+				<debris_secretion_rate description="rate that dead cells release debris" type="double" units="1/min">1</debris_secretion_rate>
+					
+				 
+				<TCell_detection description="protein value at which a T Cell can detect an infected cell" type="double" units="protein">10</TCell_detection>
+				<TCell_contact_time description="tracks total contact time with CD8 T cells" type="double" units="min">0.0</TCell_contact_time>
+				<cell_attachment_rate description="the rate at which the cell attaches to cells in contact" type="double" units="1/min">0</cell_attachment_rate>
+				<cell_attachment_lifetime description="the mean duration of a cell-cell attachment" type="double" units="min">0</cell_attachment_lifetime>
+				
+				<TCell_contact_death_threshold description="threshold CD8 T cell contact time to trigger apoptosis" type="double" units="min">90</TCell_contact_death_threshold> 
+				<max_attachment_distance desription="max distance at which to form a cell-cell attachment" type="double" units="micron">15</max_attachment_distance>
+				<elastic_attachment_coefficient description="elastic coefficient for cell-cell attachment" type="double" units="1/min">0.01</elastic_attachment_coefficient>
+		        
+		        
+				
+				<time_to_next_phagocytosis description="time it takes for the apoptotic material to be phagocytosed" type="double" units="min">0</time_to_next_phagocytosis>
+				
+				<material_internalisation_rate desription="rate material is ingested by phagocyte" type="double" units="micron/min">1</material_internalisation_rate>
+				
+				<threshold_macrophage_volume desription="Threshold volume for macrophage exhaustion" type="double" units="micron">6500</threshold_macrophage_volume>
+
+				 
+				<exhausted_macrophage_death_rate desription="Threshold volume for neutrophil exhaustion" type="double" units="1/min">0.01</exhausted_macrophage_death_rate>
+				 
+				<ability_to_phagocytose_infected_cell description="Boolean for whether macrophages can phagocytose infected cells" type="int" units="dimensionless">0</ability_to_phagocytose_infected_cell>
+				 
+				<time_of_DC_departure description="Time DC leaves tissue after activation" type="double" units="min">0</time_of_DC_departure>
+
+				
+				<phagocytosis_rate desription="rate of phagocytosing a nearby target" type="double" units="1/min">0.167</phagocytosis_rate>
+				
+							
+				<phagocytosis_relative_target_cutoff_size desription="do not phagocytose anything over this size (relative to cell's volume)" type="double" unit="dimensionless">1.1</phagocytosis_relative_target_cutoff_size>
+
+				<sensitivity_to_debris_chemotaxis description="relative sensitivity to debris in chemotaxis" type="double" units="dimensionless">1.0</sensitivity_to_debris_chemotaxis>
+				<sensitivity_to_ISF_chemotaxis description="relative sensitivity to ISF in chemotaxis" type="double" units="dimensionless">10.0</sensitivity_to_ISF_chemotaxis> 
+
+				<activated_speed description="speed after activation" type="double" units="micron/min">0.4</activated_speed>
+				<activated_cytokine_secretion_rate description="rate of secreting pro-inflamatory cytokine after activation" type="double" units="1/min">0.001</activated_cytokine_secretion_rate>
+
+				<activated_immune_cell description="used internally to track activation state" type="double" units="dimensionless">0.0</activated_immune_cell>
+					
+				
+				<antiinflammatory_cytokine_secretion_rate_by_macrophage description="secretion rate of anti-inflammatory from macrophage" type="double" units="1/min">0.07</antiinflammatory_cytokine_secretion_rate_by_macrophage>
+
+				
+				<generation description="cell proliferation generation" type="int" units="dimensionless">3</generation>
+
+
+				
+
+				 
+				<antigen_protein description="number of unbound antigen proteins on tumor cell membrane" type="double" units="antigen">500</antigen_protein>
+				<antibody_antigen_complex description="number of antibody-antigen protein complex on tumor cell membrane" type="double" units="complex">0</antibody_antigen_complex>
+				<antibody_binding_rate description="antigen protein-antibody binding rate" type="double" units="1/min">0.08</antibody_binding_rate> 
+				<last_cycle_entry_time description="time that tumor cell entry cycle when division" type="double" units="mins">0</last_cycle_entry_time>
+				<division_generation description="how many generations tumor cell has divided" type="int" units="generation">0</division_generation>
+				<E_Ig_complex description="the effect of antibody-antigen protein complex" type="double" units="none">0</E_Ig_complex>
+
+				 
+				<total_intern_LNP desription="how many of total LNP are endocytosed in DC cell" type="double" units="LNP">0</total_intern_LNP>
+				<endosome_LNP desription="how many LNP are endocytosed in endosome" type="double" units="LNP">0</endosome_LNP>
+				<free_LNP desription="how many LNP are free in cytoplasm (escape from endosome)" type="double" units="LNP">0</free_LNP>
+				<uncoated_LNP desription="how many LNP are uncoated" type="double" units="LNP">0</uncoated_LNP>
+				<mRNA desription="how many mRNA are cytoplasm" type="double" units="mRNA">0</mRNA>
+				<antigenic_epitope desription="how many epitope are translated" type="double" units="epitope">0</antigenic_epitope>
+			
+			</custom_data>
+		</cell_definition>
+
+		 
+		<cell_definition ID="10" name="tumor cell" visible="true">
+			<phenotype>
+				<cycle code="6" name="flow_cytometry_separated_cycle_model">  
+					
+					<phase_transition_rates units="1/min"> 
+						
+						<rate end_index="1" fixed_duration="false" start_index="0">0.00072</rate>
+						 
+						
+						<rate end_index="2" fixed_duration="true" start_index="1">0.00208333</rate>
+						
+						<rate end_index="3" fixed_duration="true" start_index="2">0.00416667</rate>
+						
+						<rate end_index="0" fixed_duration="true" start_index="3">0.0166667</rate>
+					</phase_transition_rates>
+				</cycle>
+				
+				<death>  
+					<model code="100" name="apoptosis"> 
+						<death_rate units="1/min">5.31667e-05</death_rate>  
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="true" start_index="0">9e9</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+
+					<model code="101" name="necrosis">
+						<death_rate units="1/min">0.0</death_rate>
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="false" start_index="0">9e9</rate>
+							<rate end_index="2" fixed_duration="true" start_index="1">1.15741e-5</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+				</death>					
+
+				<volume>  
+					<total units="micron^3">2494</total>
+					<fluid_fraction units="dimensionless">0.75</fluid_fraction>
+					<nuclear units="micron^3">540</nuclear>
+					
+					<fluid_change_rate units="1/min">0.05</fluid_change_rate>
+					<cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+					<nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+					
+					<calcified_fraction units="dimensionless">0</calcified_fraction>
+					<calcification_rate units="1/min">0</calcification_rate>
+					
+					<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+				</volume> 				
+				
+				<mechanics> 
+					<cell_cell_adhesion_strength units="micron/min">0.4</cell_cell_adhesion_strength>
+					<cell_cell_repulsion_strength units="micron/min">10.0</cell_cell_repulsion_strength>
+					<relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+					
+					<options>
+						<set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+						<set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+					</options>
+				</mechanics>
+				
+				<motility>  
+					<speed units="micron/min">4</speed>
+					<persistence_time units="min">5</persistence_time>
+					<migration_bias units="dimensionless">0.7</migration_bias>
+					
+					<options>
+						<enabled>false</enabled>
+						<use_2D>true</use_2D>
+						<chemotaxis>
+							<enabled>false</enabled>
+							<substrate>ISF</substrate>
+							<direction>1</direction>
+						</chemotaxis>
+					</options>
+				</motility>
+
+				<secretion>	
+					<substrate name="ISF">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+					<substrate name="debris">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate>	
+					<substrate name="Ig">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+						
+				</secretion>
+
+				<molecular />
+			</phenotype>
+			<custom_data>  
+				 
+				<unbound_external_receptor description="initial number of unbound receptors on DC surface" type="double" units="receptors">200</unbound_external_receptor>
+				<bound_external_receptor description="initial number of bound receptors on DC surface" type="double" units="receptors">0</bound_external_receptor>
+				<unbound_internal_receptor description="initial number of internalized unbound receptors" type="double" units="receptors">0</unbound_internal_receptor>
+				<bound_internal_receptor description="initial number of internalized bound receptors" type="double" units="receptors">0</bound_internal_receptor>
+	
+				<receptor_binding_rate description="DC receptor-LNP binding rate" type="double" units="1/min">0.001</receptor_binding_rate> 
+				<receptor_endocytosis_rate description="DC receptor-LNP endocytosis rate" type="double" units="1/min">0.01</receptor_endocytosis_rate> 
+				<receptor_cargo_release_rate description="DC receptor-LNP cargo release rate" type="double" units="1/min">0.01</receptor_cargo_release_rate> 
+				<receptor_recycling_rate description="DC receptor recycling rate" type="double" units="1/min">0.01</receptor_recycling_rate> 
+				
+				 
+				<debris_secretion_rate description="rate that dead cells release debris" type="double" units="1/min">1</debris_secretion_rate>
+					
+				 
+				<TCell_detection description="protein value at which a T Cell can detect an infected cell" type="double" units="protein">10</TCell_detection>
+				<TCell_contact_time description="tracks total contact time with CD8 T cells" type="double" units="min">0.0</TCell_contact_time>
+				<cell_attachment_rate description="the rate at which the cell attaches to cells in contact" type="double" units="1/min">0</cell_attachment_rate>
+				<cell_attachment_lifetime description="the mean duration of a cell-cell attachment" type="double" units="min">0</cell_attachment_lifetime>
+				
+				<TCell_contact_death_threshold description="threshold CD8 T cell contact time to trigger apoptosis" type="double" units="min">90</TCell_contact_death_threshold> 
+				<max_attachment_distance desription="max distance at which to form a cell-cell attachment" type="double" units="micron">15</max_attachment_distance>
+				<elastic_attachment_coefficient description="elastic coefficient for cell-cell attachment" type="double" units="1/min">0.01</elastic_attachment_coefficient>
+		        
+		        
+				
+				<time_to_next_phagocytosis description="time it takes for the apoptotic material to be phagocytosed" type="double" units="min">0</time_to_next_phagocytosis>
+				
+				<material_internalisation_rate desription="rate material is ingested by phagocyte" type="double" units="micron/min">1</material_internalisation_rate>
+				
+				<threshold_macrophage_volume desription="Threshold volume for macrophage exhaustion" type="double" units="micron">6500</threshold_macrophage_volume>
+
+				 
+				<exhausted_macrophage_death_rate desription="Threshold volume for neutrophil exhaustion" type="double" units="1/min">0.01</exhausted_macrophage_death_rate>
+				 
+				<ability_to_phagocytose_infected_cell description="Boolean for whether macrophages can phagocytose infected cells" type="int" units="dimensionless">0</ability_to_phagocytose_infected_cell>
+				 
+				<time_of_DC_departure description="Time DC leaves tissue after activation" type="double" units="min">0</time_of_DC_departure>
+
+				
+				<phagocytosis_rate desription="rate of phagocytosing a nearby target" type="double" units="1/min">0.167</phagocytosis_rate>
+				
+							
+				<phagocytosis_relative_target_cutoff_size desription="do not phagocytose anything over this size (relative to cell's volume)" type="double" unit="dimensionless">1.1</phagocytosis_relative_target_cutoff_size>
+
+				<sensitivity_to_debris_chemotaxis description="relative sensitivity to debris in chemotaxis" type="double" units="dimensionless">1.0</sensitivity_to_debris_chemotaxis>
+				<sensitivity_to_ISF_chemotaxis description="relative sensitivity to ISF in chemotaxis" type="double" units="dimensionless">10.0</sensitivity_to_ISF_chemotaxis> 
+
+				<activated_speed description="speed after activation" type="double" units="micron/min">0.4</activated_speed>
+				<activated_cytokine_secretion_rate description="rate of secreting pro-inflamatory cytokine after activation" type="double" units="1/min">0.001</activated_cytokine_secretion_rate>
+
+				<activated_immune_cell description="used internally to track activation state" type="double" units="dimensionless">0.0</activated_immune_cell>
+					
+				
+				<antiinflammatory_cytokine_secretion_rate_by_macrophage description="secretion rate of anti-inflammatory from macrophage" type="double" units="1/min">0.07</antiinflammatory_cytokine_secretion_rate_by_macrophage>
+
+				
+				<generation description="cell proliferation generation" type="int" units="dimensionless">3</generation>
+
+
+				
+
+				 
+				<antigen_protein description="number of unbound antigen proteins on tumor cell membrane" type="double" units="antigen">500</antigen_protein>
+				<antibody_antigen_complex description="number of antibody-antigen protein complex on tumor cell membrane" type="double" units="complex">0</antibody_antigen_complex>
+				<antibody_binding_rate description="antigen protein-antibody binding rate" type="double" units="1/min">0.08</antibody_binding_rate> 
+				<last_cycle_entry_time description="time that tumor cell entry cycle when division" type="double" units="mins">0</last_cycle_entry_time>
+				<division_generation description="how many generations tumor cell has divided" type="int" units="generation">0</division_generation>
+				<E_Ig_complex description="the effect of antibody-antigen protein complex" type="double" units="none">0</E_Ig_complex>
+
+				 
+				<total_intern_LNP desription="how many of total LNP are endocytosed in DC cell" type="double" units="LNP">0</total_intern_LNP>
+				<endosome_LNP desription="how many LNP are endocytosed in endosome" type="double" units="LNP">0</endosome_LNP>
+				<free_LNP desription="how many LNP are free in cytoplasm (escape from endosome)" type="double" units="LNP">0</free_LNP>
+				<uncoated_LNP desription="how many LNP are uncoated" type="double" units="LNP">0</uncoated_LNP>
+				<mRNA desription="how many mRNA are cytoplasm" type="double" units="mRNA">0</mRNA>
+				<antigenic_epitope desription="how many epitope are translated" type="double" units="epitope">0</antigenic_epitope>
+			
+			</custom_data>
+		</cell_definition>
+
+		 
+		<cell_definition ID="3" name="CD8 Tcell" visible="true">
+			<phenotype>
+				<cycle code="6" name="flow_cytometry_separated_cycle_model">  
+					
+					<phase_transition_rates units="1/min"> 
+						
+						<rate end_index="1" fixed_duration="false" start_index="0">0</rate>
+						 
+						
+						<rate end_index="2" fixed_duration="true" start_index="1">0.00208333</rate>
+						
+						<rate end_index="3" fixed_duration="true" start_index="2">0.00416667</rate>
+						
+						<rate end_index="0" fixed_duration="true" start_index="3">0.0166667</rate>
+					</phase_transition_rates>
+				</cycle>
+				
+				<death>  
+					<model code="100" name="apoptosis"> 
+						<death_rate units="1/min">5e-4</death_rate>  
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="true" start_index="0">0.00193798</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+
+					<model code="101" name="necrosis">
+						<death_rate units="1/min">0.0</death_rate>
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="false" start_index="0">9e9</rate>
+							<rate end_index="2" fixed_duration="true" start_index="1">1.15741e-5</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+				</death>					
+
+				<volume>  
+					<total units="micron^3">2494</total>
+					<fluid_fraction units="dimensionless">0.75</fluid_fraction>
+					<nuclear units="micron^3">540</nuclear>
+					
+					<fluid_change_rate units="1/min">0.05</fluid_change_rate>
+					<cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+					<nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+					
+					<calcified_fraction units="dimensionless">0</calcified_fraction>
+					<calcification_rate units="1/min">0</calcification_rate>
+					
+					<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+				</volume> 				
+				
+				<mechanics> 
+					<cell_cell_adhesion_strength units="micron/min">0</cell_cell_adhesion_strength>
+					<cell_cell_repulsion_strength units="micron/min">10</cell_cell_repulsion_strength>
+					<relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+					
+					<options>
+						<set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+						<set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+					</options>
+				</mechanics>
+				
+				<motility>  
+					<speed units="micron/min">4</speed>
+					<persistence_time units="min">5</persistence_time>
+					<migration_bias units="dimensionless">0.70</migration_bias>
+					
+					<options>
+						<enabled>true</enabled>
+						<use_2D>true</use_2D>
+						<chemotaxis>
+							<enabled>true</enabled>
+							<substrate>ISF</substrate>
+							<direction>1</direction>
+						</chemotaxis>
+					</options>
+				</motility>
+
+				<secretion>	
+					<substrate name="ISF">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+					<substrate name="debris">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate>	
+					<substrate name="Ig">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+						
+				</secretion>
+
+				<molecular />
+			</phenotype>
+			<custom_data>  
+				 
+				<unbound_external_receptor description="initial number of unbound receptors on DC surface" type="double" units="receptors">200</unbound_external_receptor>
+				<bound_external_receptor description="initial number of bound receptors on DC surface" type="double" units="receptors">0</bound_external_receptor>
+				<unbound_internal_receptor description="initial number of internalized unbound receptors" type="double" units="receptors">0</unbound_internal_receptor>
+				<bound_internal_receptor description="initial number of internalized bound receptors" type="double" units="receptors">0</bound_internal_receptor>
+	
+				<receptor_binding_rate description="DC receptor-LNP binding rate" type="double" units="1/min">0.001</receptor_binding_rate> 
+				<receptor_endocytosis_rate description="DC receptor-LNP endocytosis rate" type="double" units="1/min">0.01</receptor_endocytosis_rate> 
+				<receptor_cargo_release_rate description="DC receptor-LNP cargo release rate" type="double" units="1/min">0.01</receptor_cargo_release_rate> 
+				<receptor_recycling_rate description="DC receptor recycling rate" type="double" units="1/min">0.01</receptor_recycling_rate> 
+				
+				 
+				<debris_secretion_rate description="rate that dead cells release debris" type="double" units="1/min">1</debris_secretion_rate>
+					
+				 
+				<TCell_detection description="protein value at which a T Cell can detect an infected cell" type="double" units="protein">10</TCell_detection>
+				<TCell_contact_time description="tracks total contact time with CD8 T cells" type="double" units="min">0.0</TCell_contact_time>
+				<cell_attachment_rate description="the rate at which the cell attaches to cells in contact" type="double" units="1/min">0</cell_attachment_rate>
+				<cell_attachment_lifetime description="the mean duration of a cell-cell attachment" type="double" units="min">0</cell_attachment_lifetime>
+				
+				<TCell_contact_death_threshold description="threshold CD8 T cell contact time to trigger apoptosis" type="double" units="min">90</TCell_contact_death_threshold> 
+				<max_attachment_distance desription="max distance at which to form a cell-cell attachment" type="double" units="micron">15</max_attachment_distance>
+				<elastic_attachment_coefficient description="elastic coefficient for cell-cell attachment" type="double" units="1/min">0.01</elastic_attachment_coefficient>
+		        
+		        
+				
+				<time_to_next_phagocytosis description="time it takes for the apoptotic material to be phagocytosed" type="double" units="min">0</time_to_next_phagocytosis>
+				
+				<material_internalisation_rate desription="rate material is ingested by phagocyte" type="double" units="micron/min">1</material_internalisation_rate>
+				
+				<threshold_macrophage_volume desription="Threshold volume for macrophage exhaustion" type="double" units="micron">6500</threshold_macrophage_volume>
+
+				 
+				<exhausted_macrophage_death_rate desription="Threshold volume for neutrophil exhaustion" type="double" units="1/min">0.01</exhausted_macrophage_death_rate>
+				 
+				<ability_to_phagocytose_infected_cell description="Boolean for whether macrophages can phagocytose infected cells" type="int" units="dimensionless">0</ability_to_phagocytose_infected_cell>
+				 
+				<time_of_DC_departure description="Time DC leaves tissue after activation" type="double" units="min">0</time_of_DC_departure>
+
+				
+				<phagocytosis_rate desription="rate of phagocytosing a nearby target" type="double" units="1/min">0.167</phagocytosis_rate>
+				
+							
+				<phagocytosis_relative_target_cutoff_size desription="do not phagocytose anything over this size (relative to cell's volume)" type="double" unit="dimensionless">1.1</phagocytosis_relative_target_cutoff_size>
+
+				<sensitivity_to_debris_chemotaxis description="relative sensitivity to debris in chemotaxis" type="double" units="dimensionless">1.0</sensitivity_to_debris_chemotaxis>
+				<sensitivity_to_ISF_chemotaxis description="relative sensitivity to ISF in chemotaxis" type="double" units="dimensionless">10.0</sensitivity_to_ISF_chemotaxis> 
+
+				<activated_speed description="speed after activation" type="double" units="micron/min">0.4</activated_speed>
+				<activated_cytokine_secretion_rate description="rate of secreting pro-inflamatory cytokine after activation" type="double" units="1/min">0.001</activated_cytokine_secretion_rate>
+
+				<activated_immune_cell description="used internally to track activation state" type="double" units="dimensionless">0.0</activated_immune_cell>
+					
+				
+				<antiinflammatory_cytokine_secretion_rate_by_macrophage description="secretion rate of anti-inflammatory from macrophage" type="double" units="1/min">0.07</antiinflammatory_cytokine_secretion_rate_by_macrophage>
+
+				
+				<generation description="cell proliferation generation" type="int" units="dimensionless">3</generation>
+
+
+				
+
+				 
+				<antigen_protein description="number of unbound antigen proteins on tumor cell membrane" type="double" units="antigen">500</antigen_protein>
+				<antibody_antigen_complex description="number of antibody-antigen protein complex on tumor cell membrane" type="double" units="complex">0</antibody_antigen_complex>
+				<antibody_binding_rate description="antigen protein-antibody binding rate" type="double" units="1/min">0.08</antibody_binding_rate> 
+				<last_cycle_entry_time description="time that tumor cell entry cycle when division" type="double" units="mins">0</last_cycle_entry_time>
+				<division_generation description="how many generations tumor cell has divided" type="int" units="generation">0</division_generation>
+				<E_Ig_complex description="the effect of antibody-antigen protein complex" type="double" units="none">0</E_Ig_complex>
+
+				 
+				<total_intern_LNP desription="how many of total LNP are endocytosed in DC cell" type="double" units="LNP">0</total_intern_LNP>
+				<endosome_LNP desription="how many LNP are endocytosed in endosome" type="double" units="LNP">0</endosome_LNP>
+				<free_LNP desription="how many LNP are free in cytoplasm (escape from endosome)" type="double" units="LNP">0</free_LNP>
+				<uncoated_LNP desription="how many LNP are uncoated" type="double" units="LNP">0</uncoated_LNP>
+				<mRNA desription="how many mRNA are cytoplasm" type="double" units="mRNA">0</mRNA>
+				<antigenic_epitope desription="how many epitope are translated" type="double" units="epitope">0</antigenic_epitope>
+			
+			</custom_data>
+		</cell_definition>
+
+		 
+		<cell_definition ID="4" name="macrophage" visible="true">
+			<phenotype>
+				<cycle code="6" name="flow_cytometry_separated_cycle_model">  
+					
+					<phase_transition_rates units="1/min"> 
+						
+						<rate end_index="1" fixed_duration="false" start_index="0">0</rate>
+						 
+						
+						<rate end_index="2" fixed_duration="true" start_index="1">0.00208333</rate>
+						
+						<rate end_index="3" fixed_duration="true" start_index="2">0.00416667</rate>
+						
+						<rate end_index="0" fixed_duration="true" start_index="3">0.0166667</rate>
+					</phase_transition_rates>
+				</cycle>
+				
+				<death>  
+					<model code="100" name="apoptosis"> 
+						<death_rate units="1/min">5e-4</death_rate>  
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="true" start_index="0">0.00193798</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+
+					<model code="101" name="necrosis">
+						<death_rate units="1/min">0.0</death_rate>
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="false" start_index="0">9e9</rate>
+							<rate end_index="2" fixed_duration="true" start_index="1">1.15741e-5</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+				</death>					
+
+				<volume>  
+					<total units="micron^3">2494</total>
+					<fluid_fraction units="dimensionless">0.75</fluid_fraction>
+					<nuclear units="micron^3">540</nuclear>
+					
+					<fluid_change_rate units="1/min">0.05</fluid_change_rate>
+					<cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+					<nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+					
+					<calcified_fraction units="dimensionless">0</calcified_fraction>
+					<calcification_rate units="1/min">0</calcification_rate>
+					
+					<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+				</volume> 				
+				
+				<mechanics> 
+					<cell_cell_adhesion_strength units="micron/min">0</cell_cell_adhesion_strength>
+					<cell_cell_repulsion_strength units="micron/min">10</cell_cell_repulsion_strength>
+					<relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+					
+					<options>
+						<set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+						<set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+					</options>
+				</mechanics>
+				
+				<motility>  
+					<speed units="micron/min">4</speed>
+					<persistence_time units="min">5</persistence_time>
+					<migration_bias units="dimensionless">0.70</migration_bias>
+					
+					<options>
+						<enabled>true</enabled>
+						<use_2D>true</use_2D>
+						<chemotaxis>
+							<enabled>true</enabled>
+							<substrate>ISF</substrate>
+							<direction>1</direction>
+						</chemotaxis>
+					</options>
+				</motility>
+
+				<secretion>	
+					<substrate name="ISF">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+					<substrate name="debris">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate>	
+					<substrate name="Ig">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+						
+				</secretion>
+
+				<molecular />
+			</phenotype>
+			<custom_data>  
+				 
+				<unbound_external_receptor description="initial number of unbound receptors on DC surface" type="double" units="receptors">200</unbound_external_receptor>
+				<bound_external_receptor description="initial number of bound receptors on DC surface" type="double" units="receptors">0</bound_external_receptor>
+				<unbound_internal_receptor description="initial number of internalized unbound receptors" type="double" units="receptors">0</unbound_internal_receptor>
+				<bound_internal_receptor description="initial number of internalized bound receptors" type="double" units="receptors">0</bound_internal_receptor>
+	
+				<receptor_binding_rate description="DC receptor-LNP binding rate" type="double" units="1/min">0.001</receptor_binding_rate> 
+				<receptor_endocytosis_rate description="DC receptor-LNP endocytosis rate" type="double" units="1/min">0.01</receptor_endocytosis_rate> 
+				<receptor_cargo_release_rate description="DC receptor-LNP cargo release rate" type="double" units="1/min">0.01</receptor_cargo_release_rate> 
+				<receptor_recycling_rate description="DC receptor recycling rate" type="double" units="1/min">0.01</receptor_recycling_rate> 
+				
+				 
+				<debris_secretion_rate description="rate that dead cells release debris" type="double" units="1/min">1</debris_secretion_rate>
+					
+				 
+				<TCell_detection description="protein value at which a T Cell can detect an infected cell" type="double" units="protein">10</TCell_detection>
+				<TCell_contact_time description="tracks total contact time with CD8 T cells" type="double" units="min">0.0</TCell_contact_time>
+				<cell_attachment_rate description="the rate at which the cell attaches to cells in contact" type="double" units="1/min">0</cell_attachment_rate>
+				<cell_attachment_lifetime description="the mean duration of a cell-cell attachment" type="double" units="min">0</cell_attachment_lifetime>
+				
+				<TCell_contact_death_threshold description="threshold CD8 T cell contact time to trigger apoptosis" type="double" units="min">90</TCell_contact_death_threshold> 
+				<max_attachment_distance desription="max distance at which to form a cell-cell attachment" type="double" units="micron">15</max_attachment_distance>
+				<elastic_attachment_coefficient description="elastic coefficient for cell-cell attachment" type="double" units="1/min">0.01</elastic_attachment_coefficient>
+		        
+		        
+				
+				<time_to_next_phagocytosis description="time it takes for the apoptotic material to be phagocytosed" type="double" units="min">0</time_to_next_phagocytosis>
+				
+				<material_internalisation_rate desription="rate material is ingested by phagocyte" type="double" units="micron/min">1</material_internalisation_rate>
+				
+				<threshold_macrophage_volume desription="Threshold volume for macrophage exhaustion" type="double" units="micron">6500</threshold_macrophage_volume>
+
+				 
+				<exhausted_macrophage_death_rate desription="Threshold volume for neutrophil exhaustion" type="double" units="1/min">0.01</exhausted_macrophage_death_rate>
+				 
+				<ability_to_phagocytose_infected_cell description="Boolean for whether macrophages can phagocytose infected cells" type="int" units="dimensionless">0</ability_to_phagocytose_infected_cell>
+				 
+				<time_of_DC_departure description="Time DC leaves tissue after activation" type="double" units="min">0</time_of_DC_departure>
+
+				
+				<phagocytosis_rate desription="rate of phagocytosing a nearby target" type="double" units="1/min">0.167</phagocytosis_rate>
+				
+							
+				<phagocytosis_relative_target_cutoff_size desription="do not phagocytose anything over this size (relative to cell's volume)" type="double" unit="dimensionless">1.1</phagocytosis_relative_target_cutoff_size>
+
+				<sensitivity_to_debris_chemotaxis description="relative sensitivity to debris in chemotaxis" type="double" units="dimensionless">1.0</sensitivity_to_debris_chemotaxis>
+				<sensitivity_to_ISF_chemotaxis description="relative sensitivity to ISF in chemotaxis" type="double" units="dimensionless">10.0</sensitivity_to_ISF_chemotaxis> 
+
+				<activated_speed description="speed after activation" type="double" units="micron/min">0.4</activated_speed>
+				<activated_cytokine_secretion_rate description="rate of secreting pro-inflamatory cytokine after activation" type="double" units="1/min">0.001</activated_cytokine_secretion_rate>
+
+				<activated_immune_cell description="used internally to track activation state" type="double" units="dimensionless">0.0</activated_immune_cell>
+					
+				
+				<antiinflammatory_cytokine_secretion_rate_by_macrophage description="secretion rate of anti-inflammatory from macrophage" type="double" units="1/min">0.07</antiinflammatory_cytokine_secretion_rate_by_macrophage>
+
+				
+				<generation description="cell proliferation generation" type="int" units="dimensionless">3</generation>
+
+
+				
+
+				 
+				<antigen_protein description="number of unbound antigen proteins on tumor cell membrane" type="double" units="antigen">500</antigen_protein>
+				<antibody_antigen_complex description="number of antibody-antigen protein complex on tumor cell membrane" type="double" units="complex">0</antibody_antigen_complex>
+				<antibody_binding_rate description="antigen protein-antibody binding rate" type="double" units="1/min">0.08</antibody_binding_rate> 
+				<last_cycle_entry_time description="time that tumor cell entry cycle when division" type="double" units="mins">0</last_cycle_entry_time>
+				<division_generation description="how many generations tumor cell has divided" type="int" units="generation">0</division_generation>
+				<E_Ig_complex description="the effect of antibody-antigen protein complex" type="double" units="none">0</E_Ig_complex>
+
+				 
+				<total_intern_LNP desription="how many of total LNP are endocytosed in DC cell" type="double" units="LNP">0</total_intern_LNP>
+				<endosome_LNP desription="how many LNP are endocytosed in endosome" type="double" units="LNP">0</endosome_LNP>
+				<free_LNP desription="how many LNP are free in cytoplasm (escape from endosome)" type="double" units="LNP">0</free_LNP>
+				<uncoated_LNP desription="how many LNP are uncoated" type="double" units="LNP">0</uncoated_LNP>
+				<mRNA desription="how many mRNA are cytoplasm" type="double" units="mRNA">0</mRNA>
+				<antigenic_epitope desription="how many epitope are translated" type="double" units="epitope">0</antigenic_epitope>
+			
+			</custom_data>
+		</cell_definition>
+
+		 
+		<cell_definition ID="6" name="DC" visible="true">
+			<phenotype>
+				<cycle code="6" name="flow_cytometry_separated_cycle_model">  
+					
+					<phase_transition_rates units="1/min"> 
+						
+						<rate end_index="1" fixed_duration="false" start_index="0">0</rate>
+						 
+						
+						<rate end_index="2" fixed_duration="true" start_index="1">0.00208333</rate>
+						
+						<rate end_index="3" fixed_duration="true" start_index="2">0.00416667</rate>
+						
+						<rate end_index="0" fixed_duration="true" start_index="3">0.0166667</rate>
+					</phase_transition_rates>
+				</cycle>
+				
+				<death>  
+					<model code="100" name="apoptosis"> 
+						<death_rate units="1/min">5e-4</death_rate>  
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="true" start_index="0">0.00193798</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+
+					<model code="101" name="necrosis">
+						<death_rate units="1/min">0.0</death_rate>
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="false" start_index="0">9e9</rate>
+							<rate end_index="2" fixed_duration="true" start_index="1">1.15741e-5</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+				</death>					
+
+				<volume>  
+					<total units="micron^3">2494</total>
+					<fluid_fraction units="dimensionless">0.75</fluid_fraction>
+					<nuclear units="micron^3">540</nuclear>
+					
+					<fluid_change_rate units="1/min">0.05</fluid_change_rate>
+					<cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+					<nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+					
+					<calcified_fraction units="dimensionless">0</calcified_fraction>
+					<calcification_rate units="1/min">0</calcification_rate>
+					
+					<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+				</volume> 				
+				
+				<mechanics> 
+					<cell_cell_adhesion_strength units="micron/min">0</cell_cell_adhesion_strength>
+					<cell_cell_repulsion_strength units="micron/min">10</cell_cell_repulsion_strength>
+					<relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+					
+					<options>
+						<set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+						<set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+					</options>
+				</mechanics>
+				
+				<motility>  
+					<speed units="micron/min">4</speed>
+					<persistence_time units="min">5</persistence_time>
+					<migration_bias units="dimensionless">0.70</migration_bias>
+					
+					<options>
+						<enabled>true</enabled>
+						<use_2D>true</use_2D>
+						<chemotaxis>
+							<enabled>true</enabled>
+							<substrate>ISF</substrate>
+							<direction>1</direction>
+						</chemotaxis>
+					</options>
+				</motility>
+
+				<secretion>	
+					<substrate name="ISF">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+					<substrate name="debris">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate>	
+					<substrate name="Ig">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+						
+				</secretion>
+
+				<molecular />
+			</phenotype>
+			<custom_data>  
+				 
+				<unbound_external_receptor description="initial number of unbound receptors on DC surface" type="double" units="receptors">200</unbound_external_receptor>
+				<bound_external_receptor description="initial number of bound receptors on DC surface" type="double" units="receptors">0</bound_external_receptor>
+				<unbound_internal_receptor description="initial number of internalized unbound receptors" type="double" units="receptors">0</unbound_internal_receptor>
+				<bound_internal_receptor description="initial number of internalized bound receptors" type="double" units="receptors">0</bound_internal_receptor>
+	
+				<receptor_binding_rate description="DC receptor-LNP binding rate" type="double" units="1/min">0.001</receptor_binding_rate> 
+				<receptor_endocytosis_rate description="DC receptor-LNP endocytosis rate" type="double" units="1/min">0.01</receptor_endocytosis_rate> 
+				<receptor_cargo_release_rate description="DC receptor-LNP cargo release rate" type="double" units="1/min">0.01</receptor_cargo_release_rate> 
+				<receptor_recycling_rate description="DC receptor recycling rate" type="double" units="1/min">0.01</receptor_recycling_rate> 
+				
+				 
+				<debris_secretion_rate description="rate that dead cells release debris" type="double" units="1/min">1</debris_secretion_rate>
+					
+				 
+				<TCell_detection description="protein value at which a T Cell can detect an infected cell" type="double" units="protein">10</TCell_detection>
+				<TCell_contact_time description="tracks total contact time with CD8 T cells" type="double" units="min">0.0</TCell_contact_time>
+				<cell_attachment_rate description="the rate at which the cell attaches to cells in contact" type="double" units="1/min">0</cell_attachment_rate>
+				<cell_attachment_lifetime description="the mean duration of a cell-cell attachment" type="double" units="min">0</cell_attachment_lifetime>
+				
+				<TCell_contact_death_threshold description="threshold CD8 T cell contact time to trigger apoptosis" type="double" units="min">90</TCell_contact_death_threshold> 
+				<max_attachment_distance desription="max distance at which to form a cell-cell attachment" type="double" units="micron">15</max_attachment_distance>
+				<elastic_attachment_coefficient description="elastic coefficient for cell-cell attachment" type="double" units="1/min">0.01</elastic_attachment_coefficient>
+		        
+		        
+				
+				<time_to_next_phagocytosis description="time it takes for the apoptotic material to be phagocytosed" type="double" units="min">0</time_to_next_phagocytosis>
+				
+				<material_internalisation_rate desription="rate material is ingested by phagocyte" type="double" units="micron/min">1</material_internalisation_rate>
+				
+				<threshold_macrophage_volume desription="Threshold volume for macrophage exhaustion" type="double" units="micron">6500</threshold_macrophage_volume>
+
+				 
+				<exhausted_macrophage_death_rate desription="Threshold volume for neutrophil exhaustion" type="double" units="1/min">0.01</exhausted_macrophage_death_rate>
+				 
+				<ability_to_phagocytose_infected_cell description="Boolean for whether macrophages can phagocytose infected cells" type="int" units="dimensionless">0</ability_to_phagocytose_infected_cell>
+				 
+				<time_of_DC_departure description="Time DC leaves tissue after activation" type="double" units="min">0</time_of_DC_departure>
+
+				
+				<phagocytosis_rate desription="rate of phagocytosing a nearby target" type="double" units="1/min">0.167</phagocytosis_rate>
+				
+							
+				<phagocytosis_relative_target_cutoff_size desription="do not phagocytose anything over this size (relative to cell's volume)" type="double" unit="dimensionless">1.1</phagocytosis_relative_target_cutoff_size>
+
+				<sensitivity_to_debris_chemotaxis description="relative sensitivity to debris in chemotaxis" type="double" units="dimensionless">1.0</sensitivity_to_debris_chemotaxis>
+				<sensitivity_to_ISF_chemotaxis description="relative sensitivity to ISF in chemotaxis" type="double" units="dimensionless">10.0</sensitivity_to_ISF_chemotaxis> 
+
+				<activated_speed description="speed after activation" type="double" units="micron/min">0.4</activated_speed>
+				<activated_cytokine_secretion_rate description="rate of secreting pro-inflamatory cytokine after activation" type="double" units="1/min">0.001</activated_cytokine_secretion_rate>
+
+				<activated_immune_cell description="used internally to track activation state" type="double" units="dimensionless">0.0</activated_immune_cell>
+					
+				
+				<antiinflammatory_cytokine_secretion_rate_by_macrophage description="secretion rate of anti-inflammatory from macrophage" type="double" units="1/min">0.07</antiinflammatory_cytokine_secretion_rate_by_macrophage>
+
+				
+				<generation description="cell proliferation generation" type="int" units="dimensionless">3</generation>
+
+
+				
+
+				 
+				<antigen_protein description="number of unbound antigen proteins on tumor cell membrane" type="double" units="antigen">500</antigen_protein>
+				<antibody_antigen_complex description="number of antibody-antigen protein complex on tumor cell membrane" type="double" units="complex">0</antibody_antigen_complex>
+				<antibody_binding_rate description="antigen protein-antibody binding rate" type="double" units="1/min">0.08</antibody_binding_rate> 
+				<last_cycle_entry_time description="time that tumor cell entry cycle when division" type="double" units="mins">0</last_cycle_entry_time>
+				<division_generation description="how many generations tumor cell has divided" type="int" units="generation">0</division_generation>
+				<E_Ig_complex description="the effect of antibody-antigen protein complex" type="double" units="none">0</E_Ig_complex>
+
+				 
+				<total_intern_LNP desription="how many of total LNP are endocytosed in DC cell" type="double" units="LNP">0</total_intern_LNP>
+				<endosome_LNP desription="how many LNP are endocytosed in endosome" type="double" units="LNP">0</endosome_LNP>
+				<free_LNP desription="how many LNP are free in cytoplasm (escape from endosome)" type="double" units="LNP">0</free_LNP>
+				<uncoated_LNP desription="how many LNP are uncoated" type="double" units="LNP">0</uncoated_LNP>
+				<mRNA desription="how many mRNA are cytoplasm" type="double" units="mRNA">0</mRNA>
+				<antigenic_epitope desription="how many epitope are translated" type="double" units="epitope">0</antigenic_epitope>
+			
+			</custom_data>
+		</cell_definition>
+
+		 
+		<cell_definition ID="7" name="CD4 Tcell" visible="true">
+			<phenotype>
+				<cycle code="6" name="flow_cytometry_separated_cycle_model">  
+					
+					<phase_transition_rates units="1/min"> 
+						
+						<rate end_index="1" fixed_duration="false" start_index="0">0</rate>
+						 
+						
+						<rate end_index="2" fixed_duration="true" start_index="1">0.00208333</rate>
+						
+						<rate end_index="3" fixed_duration="true" start_index="2">0.00416667</rate>
+						
+						<rate end_index="0" fixed_duration="true" start_index="3">0.0166667</rate>
+					</phase_transition_rates>
+				</cycle>
+				
+				<death>  
+					<model code="100" name="apoptosis"> 
+						<death_rate units="1/min">5e-4</death_rate>  
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="true" start_index="0">0.00193798</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+
+					<model code="101" name="necrosis">
+						<death_rate units="1/min">0.0</death_rate>
+						<phase_transition_rates units="1/min">
+							<rate end_index="1" fixed_duration="false" start_index="0">9e9</rate>
+							<rate end_index="2" fixed_duration="true" start_index="1">1.15741e-5</rate>
+						</phase_transition_rates>
+						<parameters>
+							<unlysed_fluid_change_rate units="1/min">0.05</unlysed_fluid_change_rate>
+							<lysed_fluid_change_rate units="1/min">0</lysed_fluid_change_rate>
+							<cytoplasmic_biomass_change_rate units="1/min">1.66667e-02</cytoplasmic_biomass_change_rate>
+							<nuclear_biomass_change_rate units="1/min">5.83333e-03</nuclear_biomass_change_rate>
+							<calcification_rate units="1/min">0</calcification_rate>
+							<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+						</parameters>
+					</model> 
+				</death>					
+
+				<volume>  
+					<total units="micron^3">2494</total>
+					<fluid_fraction units="dimensionless">0.75</fluid_fraction>
+					<nuclear units="micron^3">540</nuclear>
+					
+					<fluid_change_rate units="1/min">0.05</fluid_change_rate>
+					<cytoplasmic_biomass_change_rate units="1/min">0.0045</cytoplasmic_biomass_change_rate>
+					<nuclear_biomass_change_rate units="1/min">0.0055</nuclear_biomass_change_rate>
+					
+					<calcified_fraction units="dimensionless">0</calcified_fraction>
+					<calcification_rate units="1/min">0</calcification_rate>
+					
+					<relative_rupture_volume units="dimensionless">2.0</relative_rupture_volume>
+				</volume> 				
+				
+				<mechanics> 
+					<cell_cell_adhesion_strength units="micron/min">0</cell_cell_adhesion_strength>
+					<cell_cell_repulsion_strength units="micron/min">10</cell_cell_repulsion_strength>
+					<relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+					
+					<options>
+						<set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+						<set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+					</options>
+				</mechanics>
+				
+				<motility>  
+					<speed units="micron/min">4</speed>
+					<persistence_time units="min">5</persistence_time>
+					<migration_bias units="dimensionless">0.70</migration_bias>
+					
+					<options>
+						<enabled>true</enabled>
+						<use_2D>true</use_2D>
+						<chemotaxis>
+							<enabled>true</enabled>
+							<substrate>ISF</substrate>
+							<direction>1</direction>
+						</chemotaxis>
+					</options>
+				</motility>
+
+				<secretion>	
+					<substrate name="ISF">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+					<substrate name="debris">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate>	
+					<substrate name="Ig">
+						<secretion_target units="dimensionless substrate concentration">1</secretion_target>
+					</substrate> 	
+						
+				</secretion>
+
+				<molecular />
+			</phenotype>
+			<custom_data>  
+				 
+				<unbound_external_receptor description="initial number of unbound receptors on DC surface" type="double" units="receptors">200</unbound_external_receptor>
+				<bound_external_receptor description="initial number of bound receptors on DC surface" type="double" units="receptors">0</bound_external_receptor>
+				<unbound_internal_receptor description="initial number of internalized unbound receptors" type="double" units="receptors">0</unbound_internal_receptor>
+				<bound_internal_receptor description="initial number of internalized bound receptors" type="double" units="receptors">0</bound_internal_receptor>
+	
+				<receptor_binding_rate description="DC receptor-LNP binding rate" type="double" units="1/min">0.001</receptor_binding_rate> 
+				<receptor_endocytosis_rate description="DC receptor-LNP endocytosis rate" type="double" units="1/min">0.01</receptor_endocytosis_rate> 
+				<receptor_cargo_release_rate description="DC receptor-LNP cargo release rate" type="double" units="1/min">0.01</receptor_cargo_release_rate> 
+				<receptor_recycling_rate description="DC receptor recycling rate" type="double" units="1/min">0.01</receptor_recycling_rate> 
+				
+				 
+				<debris_secretion_rate description="rate that dead cells release debris" type="double" units="1/min">1</debris_secretion_rate>
+					
+				 
+				<TCell_detection description="protein value at which a T Cell can detect an infected cell" type="double" units="protein">10</TCell_detection>
+				<TCell_contact_time description="tracks total contact time with CD8 T cells" type="double" units="min">0.0</TCell_contact_time>
+				<cell_attachment_rate description="the rate at which the cell attaches to cells in contact" type="double" units="1/min">0</cell_attachment_rate>
+				<cell_attachment_lifetime description="the mean duration of a cell-cell attachment" type="double" units="min">0</cell_attachment_lifetime>
+				
+				<TCell_contact_death_threshold description="threshold CD8 T cell contact time to trigger apoptosis" type="double" units="min">90</TCell_contact_death_threshold> 
+				<max_attachment_distance desription="max distance at which to form a cell-cell attachment" type="double" units="micron">15</max_attachment_distance>
+				<elastic_attachment_coefficient description="elastic coefficient for cell-cell attachment" type="double" units="1/min">0.01</elastic_attachment_coefficient>
+		        
+		        
+				
+				<time_to_next_phagocytosis description="time it takes for the apoptotic material to be phagocytosed" type="double" units="min">0</time_to_next_phagocytosis>
+				
+				<material_internalisation_rate desription="rate material is ingested by phagocyte" type="double" units="micron/min">1</material_internalisation_rate>
+				
+				<threshold_macrophage_volume desription="Threshold volume for macrophage exhaustion" type="double" units="micron">6500</threshold_macrophage_volume>
+
+				 
+				<exhausted_macrophage_death_rate desription="Threshold volume for neutrophil exhaustion" type="double" units="1/min">0.01</exhausted_macrophage_death_rate>
+				 
+				<ability_to_phagocytose_infected_cell description="Boolean for whether macrophages can phagocytose infected cells" type="int" units="dimensionless">0</ability_to_phagocytose_infected_cell>
+				 
+				<time_of_DC_departure description="Time DC leaves tissue after activation" type="double" units="min">0</time_of_DC_departure>
+
+				
+				<phagocytosis_rate desription="rate of phagocytosing a nearby target" type="double" units="1/min">0.167</phagocytosis_rate>
+				
+							
+				<phagocytosis_relative_target_cutoff_size desription="do not phagocytose anything over this size (relative to cell's volume)" type="double" unit="dimensionless">1.1</phagocytosis_relative_target_cutoff_size>
+
+				<sensitivity_to_debris_chemotaxis description="relative sensitivity to debris in chemotaxis" type="double" units="dimensionless">1.0</sensitivity_to_debris_chemotaxis>
+				<sensitivity_to_ISF_chemotaxis description="relative sensitivity to ISF in chemotaxis" type="double" units="dimensionless">10.0</sensitivity_to_ISF_chemotaxis> 
+
+				<activated_speed description="speed after activation" type="double" units="micron/min">0.4</activated_speed>
+				<activated_cytokine_secretion_rate description="rate of secreting pro-inflamatory cytokine after activation" type="double" units="1/min">0.001</activated_cytokine_secretion_rate>
+
+				<activated_immune_cell description="used internally to track activation state" type="double" units="dimensionless">0.0</activated_immune_cell>
+					
+				
+				<antiinflammatory_cytokine_secretion_rate_by_macrophage description="secretion rate of anti-inflammatory from macrophage" type="double" units="1/min">0.07</antiinflammatory_cytokine_secretion_rate_by_macrophage>
+
+				
+				<generation description="cell proliferation generation" type="int" units="dimensionless">3</generation>
+
+
+				
+
+				 
+				<antigen_protein description="number of unbound antigen proteins on tumor cell membrane" type="double" units="antigen">500</antigen_protein>
+				<antibody_antigen_complex description="number of antibody-antigen protein complex on tumor cell membrane" type="double" units="complex">0</antibody_antigen_complex>
+				<antibody_binding_rate description="antigen protein-antibody binding rate" type="double" units="1/min">0.08</antibody_binding_rate> 
+				<last_cycle_entry_time description="time that tumor cell entry cycle when division" type="double" units="mins">0</last_cycle_entry_time>
+				<division_generation description="how many generations tumor cell has divided" type="int" units="generation">0</division_generation>
+				<E_Ig_complex description="the effect of antibody-antigen protein complex" type="double" units="none">0</E_Ig_complex>
+
+				 
+				<total_intern_LNP desription="how many of total LNP are endocytosed in DC cell" type="double" units="LNP">0</total_intern_LNP>
+				<endosome_LNP desription="how many LNP are endocytosed in endosome" type="double" units="LNP">0</endosome_LNP>
+				<free_LNP desription="how many LNP are free in cytoplasm (escape from endosome)" type="double" units="LNP">0</free_LNP>
+				<uncoated_LNP desription="how many LNP are uncoated" type="double" units="LNP">0</uncoated_LNP>
+				<mRNA desription="how many mRNA are cytoplasm" type="double" units="mRNA">0</mRNA>
+				<antigenic_epitope desription="how many epitope are translated" type="double" units="epitope">0</antigenic_epitope>
+			
+			</custom_data>
+		</cell_definition>
+
+		 
+		</cell_definitions>
+	
+	
+	
+	<user_parameters>
+		<random_seed type="int" units="dimensionless">0</random_seed> 
+		 
+		
+		<ignore_smoothing_flag type="int" units="dimensionless">1</ignore_smoothing_flag> 
+		
+		<div_immune description="--Immune activation parameters--" type="divider" />
+			<immune_dt description="how often we check to introduce immune cells" type="double" units="min">10</immune_dt> 
+			
+			<immune_z_offset description="immune cell position over the epithelium" type="double" units="micron">0</immune_z_offset>
+		
+		<div_initialization description="---Initialization Options--" type="divider" />
+			
+			<number_of_CD8_Tcells description="initial number of CD8 T cells in tissue" type="int" units="none">80</number_of_CD8_Tcells>  
+			<number_of_macrophages description="initial number of macrophages" type="int" units="none">50</number_of_macrophages>
+
+		    
+			<number_of_DCs description="initial number of Dendritic Cells" type="int" units="none">28</number_of_DCs> 
+		    
+			<number_of_CD4_Tcells description="initial number of CD4 Tcells in tissue" type="int" units="none">20</number_of_CD4_Tcells>  
+
+		    	
+			<DC_induced_CD8_proliferation description="DC induced CD8 proliferation rate" type="double" units="1/min">0.00208</DC_induced_CD8_proliferation> 
+			<DC_induced_CD4_proliferation description="DC induced CD4 proliferation rate" type="double" units="1/min">0.00208</DC_induced_CD4_proliferation> 
+		    
+		    
+			<DC_induced_CD8_attachment description="DC induced CD8 attachement rate" type="double" units="1/min">0.04</DC_induced_CD8_attachment> 
+		
+		    
+			<departure_rate_of_DCs description="Departure rate of activated DCs" type="double" units="1/min">0.001</departure_rate_of_DCs>
+		    		
+		    <epsilon_distance descriptions="Multiple of interaction distance for immune cells" type="double" units="dimensionless">1.75</epsilon_distance>
+
+			<perecentage_tissue_vascularized description="percentage of tissue sitting above blood vessels" type="double" units="percentage">8.8</perecentage_tissue_vascularized>			
+
+		<div_colors description="---Cell Color Options--" type="divider" />
+			<color_variable description="color cells based on this variable" type="string">assembled_virion</color_variable>
+			
+			<epithelial_opacity description="opacity of epithelial cells" type="double">0.65</epithelial_opacity>
+			<non_epithelial_opacity description="opacity of non-epithelial cells" type="double">0.8</non_epithelial_opacity>
+			
+			<apoptotic_tumor_color description="apoptotic tumor cell color" type="string">black</apoptotic_tumor_color>
+			<apoptotic_immune_color description="apoptotic immune cell color" type="string">rosybrown</apoptotic_immune_color>
+				
+            
+			<CD8_Tcell_color description="CD8 T cell color" type="string">red</CD8_Tcell_color>
+			<CD4_Tcell_color description="CD4 T cell color" type="string">orange</CD4_Tcell_color>
+			<Macrophage_color description="macrophage color" type="string">rgb(35,139,69)</Macrophage_color>
+
+			
+			<activated_macrophage_color description="color of activated macrophage" type="string">lime</activated_macrophage_color> 
+
+		    
+			<exhausted_macrophage_color description="color of exhausted macrophage" type="string">rgb(116,196,118)</exhausted_macrophage_color>
+		    
+			<hyperactivated_macrophage_color description="color of hyperactivated macrophage" type="string">rgb(168,221,181)</hyperactivated_macrophage_color>    
+		    
+		    
+			<DC_color description="DC color" type="string">rgb(129,15,124)</DC_color>
+			<activated_DC_color description="DC color" type="string">hotpink</activated_DC_color> 
+				
+		    
+			<phagocytes_virus_uptake_rate description="Rate that phagocytes uptake virus after activation" type="double" units="none">0.0001</phagocytes_virus_uptake_rate>		
+				
+		    
+			<Antibody_binding_rate description="Binding rate of antibody to infected cells" type="double" units="none">0.1</Antibody_binding_rate>
+			<antibody_half_effect description="Half effect of antibody on macrophage phagocytosis" type="double" units="none">0.1</antibody_half_effect>
+
+
+		  
+		  <div_mRNA description="---mRNA vaccine for cancer treatments--" type="divider" />
+
+			<LNP_fraction_released_at_death description="fraction of LNP released at cell death" type="double" units="none">0</LNP_fraction_released_at_death>
+
+			<ISF_secretion_rate description="ISF secretion rate of tumor cell" type="double" units="micron^3/min">0.1</ISF_secretion_rate>
+
+
+			
+			<tumor_radius description="Initial tumor radius" type="double" units="micron">350</tumor_radius>   
+			<default_apoptosis_rate description="tumor cell defatul apoptosis rate" type="double" units="1/min">5.31667e-05</default_apoptosis_rate> 
+			<max_Ig_complex_color description="the threshold of antigen-antibody complex for color tumor cell" type="double">50</max_Ig_complex_color>
+	
+			
+			<original_antigen_protein description="original number of antigen proteins on tumor cell membrane" type="double" units="antigen">500</original_antigen_protein> 
+			<antigen_antibody_inherit_ratio description="inheritance ratio of antigen-antibody complex at tumor cell division" type="double" units="none">0</antigen_antibody_inherit_ratio>  	
+			<Ig_induce_apoptosis description="Antibdy complex induce tumor apoptosis rate" type="double" units="1/min">0.005</Ig_induce_apoptosis>
+			<Ig_antigen_50 description="Antibdy-antigen complex that kill half tumor cells" type="double" units="none">90</Ig_antigen_50>
+
+
+			
+			<LNP_escape_rate desription="Rate that endocytosed LNP escape from endosome" type="double" units="1/min">0.005</LNP_escape_rate> 
+			<uncoated_LNP_rate desription="Rate that LNP are uncoated" type="double" units="1/min">0.005</uncoated_LNP_rate> 
+			<uncoated_to_RNA_rate desription="Rate that uncoated LNPs are converted to mRNA" type="double" units="1/min">0.005</uncoated_to_RNA_rate>  
+			<epitope_translation_rate desription="Rate that antigenic epitope are translated" type="double" units="1/min">0.005</epitope_translation_rate>	
+
+				
+			
+			<mRNA_decay_rate description="mRNA degradation rate" type="double" units="1/min">0.0012</mRNA_decay_rate> 
+			<antigenic_epitope_decay_rate description="antigenic epitope degradation rate" type="double" units="1/min">1.6e-04</antigenic_epitope_decay_rate>
+
+
+				
+			<activate_immune_response_time description="when T cells and antibody response activated" type="double" units="hour">0</activate_immune_response_time>   
+			<cytotoxic_T_response description="enabled cytotoxic T responses or not" type="bool" units="none">true</cytotoxic_T_response>
+			<antibody_response description="enabled antibody responses or not" type="bool" units="none">true</antibody_response>
+
+			<CD8_recruit_rate description="max CD8 T recruitment rate (for antigen epitope)" type="double" units="cells/min">0.0005</CD8_recruit_rate> 
+			<CD4_recruit_rate description="max CD4 T recruitment rate (for antigen epitope)" type="double" units="cells/min">0.0005</CD4_recruit_rate> 
+			<Ig_recruit_rate description="max antibody recruitment rate (due to CD4 T)" type="double" units="Ig/min">0.1</Ig_recruit_rate> 
+
+
+			
+			<encapsulate_LNP_initial description="If directly encapsulate LNPs in endosome of DC cells directly" type="bool" units="none">false</encapsulate_LNP_initial>  
+
+			<mRNA_doses description="LNP injection doses" type="double" units="none">1.0</mRNA_doses>
+	        <injection_frequency description="The NP injection frequency" type="double" units="day">7</injection_frequency> 
+	        
+	        <clearance_rate description="NPs cleaning rate in blood vessel" type="double" units="1/min">4.8135e-04</clearance_rate>
+	        <start_inject_time description="when inject mRNA vaccine LNP" type="double" units="hour">1</start_inject_time> 
+
+
+	        
+	        <introduce_DC_cells_time description="when introduce DC cells in tumor domain" type="double" units="hour">1</introduce_DC_cells_time>
+	        <DC_tumor_ratio description="the ratio of DCs and tumor cells (viable) when introduceed" type="double" units="none">0.1</DC_tumor_ratio>     
+	        
+	        <number_DCs_introduced description="number of DCs when introduceed" type="int" units="none">226</number_DCs_introduced>     
+			<ISF_needed_for_DC_activation descriptions="Concentration of ISF needed to activate DC" type="double" units="none">0.5</ISF_needed_for_DC_activation>
+			<antigenic_epitope_needed_for_DC_activation descriptions="Translated antigenic epitope inside of DC cells needed to activate DC" type="double" units="none">15</antigenic_epitope_needed_for_DC_activation>
+	        
+		
+	</user_parameters>
+	
+</PhysiCell_settings>
